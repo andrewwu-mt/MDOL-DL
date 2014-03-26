@@ -5,12 +5,15 @@ import org.tanukisoftware.wrapper.WrapperListener;
 import org.tanukisoftware.wrapper.WrapperManager;
 
 import com.metrics.MDOL.snapshot.Scheduler;
-import com.metrics.rfa.main.Quote;
+import com.metrics.rfa.news.NewsViewer;
+import com.metrics.rfa.news.TestClass;
 import com.metrics.rfa.quick.QSConsumer;
 
 
 public class Main implements WrapperListener{
-	Quote quote;
+	//Quote quote;
+	NewsViewer news;
+	 
 	ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 	
 	public static void main(String[] args){
@@ -35,13 +38,16 @@ public class Main implements WrapperListener{
 		Thread t = new Thread(new Runnable(){
 			@Override
 			public void run() {
+				new QSConsumer(context);
 				try {
-					new QSConsumer(context);
-					Thread.sleep(8000);
-					new Scheduler(context);
+					Thread.sleep(5000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				new Scheduler(context);
+				
+				news = new NewsViewer(context);
+				news.run();
 			}
 		});
 		t.start();

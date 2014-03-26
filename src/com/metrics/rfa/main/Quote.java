@@ -12,7 +12,7 @@ public class Quote {
 
     public static void main(String[] args) throws InterruptedException{
 		new QSConsumer(context);
-		Thread.sleep(2500);
+		Thread.sleep(5000);
 		new Scheduler(context);
     }
     
