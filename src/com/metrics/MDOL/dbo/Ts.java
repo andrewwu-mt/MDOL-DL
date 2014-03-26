@@ -32,6 +32,7 @@ public class Ts  implements java.io.Serializable {
      private String vol;
      private String last;
      private Timestamp date;
+     private String displayName;
 
 
     // Constructors
@@ -42,7 +43,7 @@ public class Ts  implements java.io.Serializable {
 
     
     /** full constructor */
-    public Ts(String ts, String bid, String open, String high, String low, String ask, String highBid, String lowBid, String openAsk, String highAsk, String lowAsk, String close, String vol, Timestamp date) {
+    public Ts(String ts, String bid, String open, String high, String low, String ask, String highBid, String lowBid, String openAsk, String highAsk, String lowAsk, String close, String vol, Timestamp date, String displayName) {
         this.ts = ts;
         this.bid = bid;
         this.open = open;
@@ -57,6 +58,7 @@ public class Ts  implements java.io.Serializable {
         this.close = close;
         this.vol = vol;
         this.date = date;
+        this.displayName = displayName;
     }
 
    
@@ -194,6 +196,16 @@ public class Ts  implements java.io.Serializable {
 
 	public void setLast(String last) {
 		this.last = last;
+	}
+
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
 

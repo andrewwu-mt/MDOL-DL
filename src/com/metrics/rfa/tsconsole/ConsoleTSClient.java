@@ -19,6 +19,7 @@ import com.metrics.MDOL.dbo.Field;
 import com.metrics.MDOL.dbo.FieldList;
 import com.metrics.MDOL.dbo.Symbol;
 import com.metrics.MDOL.dbo.Ts;
+import com.metrics.MDOL.util.Streamer;
 import com.metrics.MDOL.util.TimeUtil;
 import com.metrics.rfa.framework.idn.RefChainTimeSeriesDefDb;
 import com.metrics.rfa.framework.idn.TS1TimeSeries;
@@ -61,6 +62,8 @@ public class ConsoleTSClient implements TS1TimeSeriesClient {
     	
     	String item = series.getBaseName();
     	item = "["+item+"]";
+    	
+    	String disp = Streamer.map.get(item+"DSPLY_NAME").get(0).getVal();
     	
         DateFormat formatter = new SimpleDateFormat("yyyy MMM dd   HH:mm");
 
@@ -166,10 +169,12 @@ public class ConsoleTSClient implements TS1TimeSeriesClient {
         		now = now.substring(0,10);
         		if(now.equals(tsTime)){
         			//tsDao.update(tsChk);
+        			tsChk.setDisplayName(disp);
         			updateList.add(tsChk);
         		}
         	} else {
             	//tsDao.save(timeSeries);
+        		timeSeries.setDisplayName(disp);
             	saveList.add(timeSeries);
         	}
             k++;
