@@ -232,7 +232,7 @@ public class QSConsumer implements Runnable
 	        //Streamer.map.clear();
 	        System.out.println("QSConsumer : Item Updated");
 		} else {
-			System.out.println("QSConsumer : Nothing changed");
+			//System.out.println("QSConsumer : Nothing changed");
 		}
 	}
 	
