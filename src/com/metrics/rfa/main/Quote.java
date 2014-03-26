@@ -5,7 +5,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.metrics.MDOL.snapshot.Scheduler;
 import com.metrics.rfa.quick.QSConsumer;
-import com.metrics.rfa.tsconsole.TimeSeriesConsole;
 
 public class Quote {
 	
@@ -15,10 +14,6 @@ public class Quote {
 		new QSConsumer(context);
 		Thread.sleep(5000);
 		new Scheduler(context);
-		
-		Thread.sleep(5000);
-		
-		new TimeSeriesConsole(context);
     }
     
     
