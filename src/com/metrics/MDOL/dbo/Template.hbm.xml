@@ -19,11 +19,5 @@
             </key>
             <one-to-many class="com.metrics.MDOL.dbo.Symbol" />
         </set>
-        <set name="templateArgs" inverse="true">
-            <key>
-                <column name="template_id" not-null="true" unique="true" />
-            </key>
-            <one-to-many class="com.metrics.MDOL.dbo.TemplateArg" />
-        </set>
     </class>
 </hibernate-mapping>
