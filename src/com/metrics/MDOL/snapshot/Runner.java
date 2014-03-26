@@ -11,9 +11,11 @@ import com.metrics.MDOL.bean.NowLast;
 import com.metrics.MDOL.dao.ExchangeDao;
 import com.metrics.MDOL.dao.FieldDao;
 import com.metrics.MDOL.dao.QuoteDao;
+import com.metrics.MDOL.dao.QuoteDayDao;
 import com.metrics.MDOL.dbo.Exchange;
 import com.metrics.MDOL.dbo.Field;
 import com.metrics.MDOL.dbo.Quote;
+import com.metrics.MDOL.dbo.QuoteDay;
 import com.metrics.MDOL.dbo.Symbol;
 import com.metrics.MDOL.util.Streamer;
 import com.metrics.MDOL.util.TimeUtil;
@@ -29,6 +31,7 @@ public class Runner {
 	private QuoteDao quoteDao;
 	private FieldDao fieldDao;
 	private ExchangeDao exchangeDao;
+	private QuoteDayDao quoteDayDao;
 	
 	List<Field> fieldAll = new ArrayList<Field>();
 	List<Exchange> exchAll = new ArrayList<Exchange>();
@@ -40,6 +43,7 @@ public class Runner {
 		quoteDao = (QuoteDao) _context.getBean("quoteDaoProxy");
 		fieldDao = (FieldDao) _context.getBean("fieldDaoProxy");
 		exchangeDao = (ExchangeDao) _context.getBean("exchangeDaoProxy");
+		quoteDayDao = (QuoteDayDao) _context.getBean("quoteDayDaoProxy");
 	}
 	
 	public void runner() {
@@ -60,7 +64,7 @@ public class Runner {
 		Timestamp time = TimeUtil.getTimeStamp(new Date());
 		
 		List<Quote> quoteList = new ArrayList<Quote>();
-
+		List<QuoteDay> quoteDayList = new ArrayList<QuoteDay>();
 		
 		
 		for(int i=0 ; i<fieldAll.size() ; i++){
@@ -119,9 +123,11 @@ public class Runner {
 			} 
 			
 			if(skip == 1){
-				System.err.println(symbol.getName()+" : Closed");
+//				System.err.println(symbol.getName()+" : Closed");
 			} else {
 				Quote quote = new Quote();
+				QuoteDay quoteDay = new QuoteDay();
+				
 				String displayName = "-";
 				List<NowLast> disp = Streamer.map.get(symName+"DSPLY_NAME");
 				if(disp != null){
@@ -166,14 +172,20 @@ public class Runner {
 				value = String.valueOf(result);
 				
 				quote.setField(field);
+				quoteDay.setField(field);
 				quote.setSymbol(symbol);
+				quoteDay.setSymbol(symbol);
 				if(value.equals("")){
 					value = "-1";
 				}
 				quote.setValNow(Double.valueOf(value));
+				quoteDay.setValNow(Double.valueOf(value));
 				quote.setInsertDate(time);
+				quoteDay.setInsertDate(time);
 				quote.setValLast(Double.valueOf(value));
+				quoteDay.setValLast(Double.valueOf(value));
 		    	quote.setDisplayName(displayName);
+		    	quoteDay.setDisplayName(displayName);
 		    	
 		    	String serverTime = "";
 		    	String serverDate = "";
@@ -186,29 +198,34 @@ public class Runner {
 		    		serverDate = dateList.get(0).getVal();
 		    	}
 
-				if(!value.equals("-1") && !field.getExpression().equals("-1")){
+				if(!value.equals("-1") && !expression.equals("-1")){
 					Timestamp serverUpdateTimeStamp = null;
 					if(serverTime != null && serverDate != null && !serverTime.equals("") && !serverDate.equals("") ){
 				    	String serverUpdate = serverDate + serverTime;
 				    	if(serverUpdate != null && !"".equals(serverUpdate)){
 					    	serverUpdateTimeStamp = TimeUtil.getTimeOMM(serverUpdate);
 					    	quote.setServerTime(serverUpdateTimeStamp);
+					    	quoteDay.setServerTime(serverUpdateTimeStamp);
 				    	}
 					} else {
 						/*Timestamp t = quoteDao.getTopServerDateData(symbol);
 				    	quote.setServerTime(t);*/
 						quote.setServerTime(time);
+						quoteDay.setServerTime(time);
 					}
 
 					quoteList.add(quote);
+					quoteDayList.add(quoteDay);
 				} else {
-					System.err.println(symbol.getName()+" : "+field.getName()+" no value");
+//					System.err.println(symbol.getName()+" : "+field.getName()+" no value");
 				}
 			}
-
 		}
 		quoteDao.saveAll(quoteList);
-		System.out.println("Runner : COMPLETE at "+TimeUtil.getTimeString(new Date()));
+		
+		quoteDayDao.truncate();
+		quoteDayDao.saveAll(quoteDayList);
+		System.out.println("Runner : COMPLETE at "+new Date());
 	}
 
 }

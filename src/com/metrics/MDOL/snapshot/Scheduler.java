@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationContext;
 
 import com.metrics.MDOL.dao.OptionDao;
 import com.metrics.MDOL.dbo.Option;
-import com.metrics.MDOL.util.TimeUtil;
 
 
 public class Scheduler implements Runnable{
@@ -27,7 +26,7 @@ public class Scheduler implements Runnable{
 	public void run(){
 		
 		while(true){
-			System.out.println(TimeUtil.getTimeString(new Date()));
+			System.out.println(new Date());
 			Option opt = optionDao.getOptionBy(1);
 			int freq = opt.getFreq() * 1000;
 			

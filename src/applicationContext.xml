@@ -23,6 +23,27 @@ xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.spring
 
 	<bean id="IndexAction" class="com.metrics.MDOL.action.IndexAction" scope="prototype"/>
 	
+	<!-- quoteDayDao -->
+	<bean id="quoteDayDao" class="com.metrics.MDOL.dao.impl.QuoteDayDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="quoteDayDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="quoteDayDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- quoteDayDao End -->
+	
 	<!-- exchangeDao -->
 	<bean id="exchangeDao" class="com.metrics.MDOL.dao.impl.ExchangeDaoImpl">
        	<property name="sessionFactory">
@@ -42,7 +63,7 @@ xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.spring
 				</props>
 	       	</property>
 		</bean>
-	<!-- htmlDao End -->
+	<!-- exchangeDao End -->
 	
 	<!-- currencyDao -->
 	<bean id="currencyDao" class="com.metrics.MDOL.dao.impl.CurrencyDaoImpl">
