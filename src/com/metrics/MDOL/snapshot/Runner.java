@@ -37,6 +37,7 @@ public class Runner {
 	List<Exchange> exchAll = new ArrayList<Exchange>();
 	List<String> items = new ArrayList<String>();
 	List<String> list = new ArrayList<String>();
+	List<QuoteDay> quoteDayList = new ArrayList<QuoteDay>();
 	
 	public Runner(ApplicationContext context){
 		_context = context;
@@ -49,6 +50,7 @@ public class Runner {
 	public void runner() {
 		fieldAll = fieldDao.getAll();
 		exchAll = exchangeDao.getAll();
+		quoteDayList = quoteDayDao.getAll();
 		
 		for(Field f : fieldAll){
 			String symbol = f.getSymbol().getName();
@@ -126,7 +128,20 @@ public class Runner {
 //				System.err.println(symbol.getName()+" : Closed");
 			} else {
 				Quote quote = new Quote();
-				QuoteDay quoteDay = new QuoteDay();
+				QuoteDay quoteDay = null;
+				
+				for(QuoteDay qd : quoteDayList){
+					int symbolId = qd.getSymbol().getSymbolId();
+					int fieldId = qd.getField().getFieldId();
+					if(symbolId == symbol.getSymbolId() && fieldId == field.getFieldId()){
+						quoteDay = qd;
+						break;
+					}
+				}
+				
+				if(quoteDay == null){
+					quoteDay = new QuoteDay();
+				}
 				
 				String displayName = "-";
 				List<NowLast> disp = Streamer.map.get(symName+"DSPLY_NAME");

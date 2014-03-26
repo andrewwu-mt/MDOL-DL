@@ -10,4 +10,6 @@ public interface QuoteDayDao {
 	
 	public void saveAll(List<QuoteDay> list);
 	
+	public List<QuoteDay> getAll();
+	
 }
