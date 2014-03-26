@@ -6,7 +6,6 @@ import org.tanukisoftware.wrapper.WrapperManager;
 
 import com.metrics.MDOL.snapshot.Scheduler;
 import com.metrics.rfa.news.NewsViewer;
-import com.metrics.rfa.news.TestClass;
 import com.metrics.rfa.quick.QSConsumer;
 
 

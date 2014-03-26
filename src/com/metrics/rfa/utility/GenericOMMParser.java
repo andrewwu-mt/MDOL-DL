@@ -704,12 +704,6 @@ public final class GenericOMMParser
                             	parseData(data, ps, tabLevel);
 	                            List<NowLast> list = new ArrayList<NowLast>();
 	                            
-	                            
-                            	//System.out.println("***********************************************************************************");
-	                            //System.out.println(itemName+fiddef.getName());
-	                            //System.out.println(data.toString());
-		                        //System.out.println("***********************************************************************************");
-	                            
 	                			list.add(new NowLast(data.toString().replace(",", "")));
 	                			Streamer.map.put("["+itemName+"]"+fiddef.getName(), list);
                         }

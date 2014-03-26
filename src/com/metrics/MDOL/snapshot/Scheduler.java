@@ -27,7 +27,7 @@ public class Scheduler implements Runnable{
 	public void run(){
 		
 		while(true){
-			System.out.println(TimeUtil.getTimeStamp(new Date()));
+			System.out.println(TimeUtil.getTimeString(new Date()));
 			Option opt = optionDao.getOptionBy(1);
 			int freq = opt.getFreq() * 1000;
 			

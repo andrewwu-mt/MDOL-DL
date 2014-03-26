@@ -18,6 +18,11 @@ import com.metrics.MDOL.dbo.Symbol;
 import com.metrics.MDOL.util.Streamer;
 import com.metrics.MDOL.util.TimeUtil;
 
+import de.congrace.exp4j.Calculable;
+import de.congrace.exp4j.ExpressionBuilder;
+import de.congrace.exp4j.UnknownFunctionException;
+import de.congrace.exp4j.UnparsableExpressionException;
+
 public class Runner {
 	
 	private ApplicationContext _context;
@@ -27,19 +32,30 @@ public class Runner {
 	
 	List<Field> fieldAll = new ArrayList<Field>();
 	List<Exchange> exchAll = new ArrayList<Exchange>();
+	List<String> items = new ArrayList<String>();
+	List<String> list = new ArrayList<String>();
 	
 	public Runner(ApplicationContext context){
 		_context = context;
 		quoteDao = (QuoteDao) _context.getBean("quoteDaoProxy");
 		fieldDao = (FieldDao) _context.getBean("fieldDaoProxy");
 		exchangeDao = (ExchangeDao) _context.getBean("exchangeDaoProxy");
-
-		
 	}
 	
 	public void runner() {
 		fieldAll = fieldDao.getAll();
 		exchAll = exchangeDao.getAll();
+		
+		for(Field f : fieldAll){
+			String symbol = f.getSymbol().getName();
+			String name = f.getName();
+			if(!items.contains(symbol)){
+				items.add(symbol);
+			}
+			if(!list.contains(name)){
+				list.add(name);
+			}
+		}
 
 		Timestamp time = TimeUtil.getTimeStamp(new Date());
 		
@@ -113,10 +129,41 @@ public class Runner {
 				}
 				
 				String value = "";
-				List<NowLast> list = Streamer.map.get(expression);
+				
+				for(int k=0 ; k<items.size() ; k++){
+					for(int l=0 ; l<list.size() ; l++){
+						String test = "["+items.get(k)+"]"+list.get(l);
+						if(expression.contains(test)){
+							List<NowLast> nowLast = Streamer.map.get(test);
+							String mapValue = "";
+							if(nowLast != null){
+								mapValue = nowLast.get(0).getVal().toString();
+							}
+							if(!mapValue.equals("")){
+								expression = expression.replace(test, mapValue);
+							} else {
+								expression = "-1";
+							}
+							
+						}
+					}
+				}
+				
+				/*List<NowLast> list = Streamer.map.get(expression);
 				if(list != null){
 					value = list.get(0).getVal();
+				}*/
+				
+				Calculable calc = null;
+				try {
+					calc = new ExpressionBuilder(expression).build();
+				} catch (UnknownFunctionException e) {
+					e.printStackTrace();
+				} catch (UnparsableExpressionException e) {
+					e.printStackTrace();
 				}
+		        double result = calc.calculate();
+				value = String.valueOf(result);
 				
 				quote.setField(field);
 				quote.setSymbol(symbol);
