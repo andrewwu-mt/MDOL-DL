@@ -37,7 +37,7 @@ public class Runner {
 	List<Exchange> exchAll = new ArrayList<Exchange>();
 	List<String> items = new ArrayList<String>();
 	List<String> list = new ArrayList<String>();
-	List<QuoteDay> quoteDayList = new ArrayList<QuoteDay>();
+	List<QuoteDay> quoteDayAll = new ArrayList<QuoteDay>();
 	
 	public Runner(ApplicationContext context){
 		_context = context;
@@ -50,7 +50,7 @@ public class Runner {
 	public void runner() {
 		fieldAll = fieldDao.getAll();
 		exchAll = exchangeDao.getAll();
-		quoteDayList = quoteDayDao.getAll();
+		quoteDayAll = quoteDayDao.getAll();
 		
 		for(Field f : fieldAll){
 			String symbol = f.getSymbol().getName();
@@ -130,7 +130,7 @@ public class Runner {
 				Quote quote = new Quote();
 				QuoteDay quoteDay = null;
 				
-				for(QuoteDay qd : quoteDayList){
+				for(QuoteDay qd : quoteDayAll){
 					int symbolId = qd.getSymbol().getSymbolId();
 					int fieldId = qd.getField().getFieldId();
 					if(symbolId == symbol.getSymbolId() && fieldId == field.getFieldId()){
@@ -238,7 +238,6 @@ public class Runner {
 		}
 		quoteDao.saveAll(quoteList);
 		
-		quoteDayDao.truncate();
 		quoteDayDao.saveAll(quoteDayList);
 		System.out.println("Runner : COMPLETE at "+new Date());
 	}
