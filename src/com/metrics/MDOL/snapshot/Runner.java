@@ -119,7 +119,7 @@ public class Runner {
 			} 
 			
 			if(skip == 1){
-//				System.err.println(symbol.getName()+" : Closed");
+				System.err.println(symbol.getName()+" : Closed");
 			} else {
 				Quote quote = new Quote();
 				String displayName = "-";
@@ -202,7 +202,7 @@ public class Runner {
 
 					quoteList.add(quote);
 				} else {
-//					System.err.println(symbol.getName()+" : "+field.getName()+" no value");
+					System.err.println(symbol.getName()+" : "+field.getName()+" no value");
 				}
 			}
 
