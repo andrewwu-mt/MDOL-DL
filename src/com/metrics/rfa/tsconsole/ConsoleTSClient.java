@@ -129,7 +129,8 @@ public class ConsoleTSClient implements TS1TimeSeriesClient {
             
             List<FieldList> list = fieldListDao.getAllList();
             TS1Point[] points = sample.getPoints();
-
+            Ts tsChk = tsDao.getByNameAndDate(series.getBaseName(), timeConvert);
+            
             for(int i=0 ; i<fidList.size() ; i++){
                 Field field = null;
             	String fidName = fidList.get(i);
@@ -160,18 +161,19 @@ public class ConsoleTSClient implements TS1TimeSeriesClient {
             		}
             	}
             }
-        	Ts tsChk = tsDao.getByNameAndDate(series.getBaseName(), timeConvert);
+        	
         	if(tsChk != null){
         		//The data is exist
-        		String tsTime = tsChk.getDate().toString();
-        		tsTime = tsTime.substring(0,10);
-        		String now = TimeUtil.getTimeStamp(new Date()).toString();
-        		now = now.substring(0,10);
-        		if(now.equals(tsTime)){
-        			//tsDao.update(tsChk);
-        			tsChk.setDisplayName(disp);
-        			updateList.add(tsChk);
-        		}
+        		tsChk.setBid(timeSeries.getBid());
+        		tsChk.setAsk(timeSeries.getAsk());
+        		tsChk.setVol(timeSeries.getVol());
+        		tsChk.setHigh(timeSeries.getHigh());
+        		tsChk.setLow(timeSeries.getLow());
+        		tsChk.setOpen(timeSeries.getOpen());
+        		tsChk.setClose(timeSeries.getClose());
+        		tsChk.setLast(timeSeries.getLast());
+    			tsChk.setDisplayName(disp);
+    			updateList.add(tsChk);
         	} else {
             	//tsDao.save(timeSeries);
         		timeSeries.setDisplayName(disp);

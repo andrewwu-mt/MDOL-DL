@@ -215,7 +215,8 @@ public class TimeSeriesConsole implements SubAppContextClient
 			                
 			                int count = 0;
 			                if(ts != null){
-			                	count = Integer.MAX_VALUE;
+			                	//count = Integer.MAX_VALUE;
+			                	count = 10;
 			                } else {
 			                	count = Integer.MAX_VALUE;
 			                }
