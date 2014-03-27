@@ -19,11 +19,11 @@
                   <entry key="portNumber" value="14002" />
                   <!-- <entry key="serverList" value="10.34.9.101" /> -->
                   <!-- <entry key="serverList" value="10.34.6.190" /> -->
-                  <entry key="serverList" value="54.238.59.183" />
+                  <!-- <entry key="serverList" value="54.238.59.183" /> -->
                   
                   
                   <!-- <entry key="serverList" value="10.10.1.122" /> -->
-                  <!-- <entry key="serverList" value="192.168.6.1" /> -->
+                  <entry key="serverList" value="192.168.6.1" />
                 </map>
               </node>
             </node>

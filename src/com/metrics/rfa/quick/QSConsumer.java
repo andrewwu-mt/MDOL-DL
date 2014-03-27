@@ -232,14 +232,16 @@ public class QSConsumer implements Runnable
 		itemsOri = itemsOri.replace(" ", "");
 		
 		if(!(items1).equals(itemsOri)){
-			_itemManager.closeRequest();
+			System.out.println("=======================================================================================================================================");
+			System.out.println("====================================================== UPDATE STARTS ==================================================================");
+			System.out.println("=======================================================================================================================================");
 			
+			_itemManager.closeRequest();
 			ItemManager.symbols = symbolDao.getAllActiveSymbol();
 			ItemManager.fields = fieldDao.getAll();
 			ItemManager.items = itemDao.getAllActiveItem();
 			ItemManager.fieldLists = fieldListDao.getAllList();
-			ItemManager.itemNames1 = items1.split(",");
-			//ItemManager.setItemNames1(items1.split(","));
+			ItemManager.setItemNames1(items1.split(","));
 
 	        _itemManager.request();	
 	        //Streamer.map.clear();
@@ -263,7 +265,7 @@ public class QSConsumer implements Runnable
 					int freq = option.getFreq();
 					int interval = freq * 1000;
 					try {
-						Thread.sleep(interval);
+						Thread.sleep(interval + 2000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
