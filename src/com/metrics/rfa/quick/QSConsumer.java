@@ -13,6 +13,8 @@ import java.util.prefs.Preferences;
 
 import org.springframework.context.ApplicationContext;
 
+import com.metrics.MDOL.dao.FieldDao;
+import com.metrics.MDOL.dao.FieldListDao;
 import com.metrics.MDOL.dao.ItemDao;
 import com.metrics.MDOL.dao.OptionDao;
 import com.metrics.MDOL.dao.SymbolDao;
@@ -49,6 +51,8 @@ public class QSConsumer implements Runnable
     protected ItemDao itemDao;
     protected OptionDao optionDao;
     protected Option opt;
+    protected FieldDao fieldDao;
+    protected FieldListDao fieldListDao;
 
 	// class constructor
     public QSConsumer(ApplicationContext context){
@@ -57,6 +61,8 @@ public class QSConsumer implements Runnable
         symbolDao = (SymbolDao) _context.getBean("symbolDaoProxy");
         itemDao = (ItemDao) _context.getBean("itemDaoProxy");
         optionDao = (OptionDao) _context.getBean("optionDaoProxy");
+        fieldDao = (FieldDao) _context.getBean("fieldDaoProxy");
+        fieldListDao = (FieldListDao) _context.getBean("fieldListDaoProxy");
         opt = optionDao.getOptionBy(1);
         
         _serviceName = opt.getServiceName();
@@ -227,7 +233,14 @@ public class QSConsumer implements Runnable
 		
 		if(!(items1).equals(itemsOri)){
 			_itemManager.closeRequest();
-			ItemManager.setItemNames1(items1.split(","));
+			
+			ItemManager.symbols = symbolDao.getAllActiveSymbol();
+			ItemManager.fields = fieldDao.getAll();
+			ItemManager.items = itemDao.getAllActiveItem();
+			ItemManager.fieldLists = fieldListDao.getAllList();
+			ItemManager.itemNames1 = items1.split(",");
+			//ItemManager.setItemNames1(items1.split(","));
+
 	        _itemManager.request();	
 	        //Streamer.map.clear();
 	        System.out.println("QSConsumer : Item Updated");

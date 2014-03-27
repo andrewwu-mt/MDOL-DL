@@ -77,7 +77,11 @@ public class Runner {
 			
 			int skip = 0;
 			if(symName.contains(".")){
-				String rdn = Streamer.map.get(symName+"RDN_EXCHID").get(0).getVal();
+				List<NowLast> rdnList = Streamer.map.get(symName+"RDN_EXCHID");
+				String rdn = "";
+				if(rdnList != null && rdnList.size() != 0){
+					rdn = Streamer.map.get(symName+"RDN_EXCHID").get(0).getVal();
+				}
 				Exchange exc = null;
 				for(Exchange e : exchAll){
 					String eName = e.getValue();

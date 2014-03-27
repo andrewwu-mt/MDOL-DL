@@ -2,14 +2,19 @@ package com.metrics.rfa.utility;
 
 import java.io.ByteArrayInputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
 
-import com.metrics.MDOL.bean.NowLast;
+import com.metrics.MDOL.dbo.Field;
+import com.metrics.MDOL.dbo.Quote;
+import com.metrics.MDOL.dbo.QuoteDay;
+import com.metrics.MDOL.dbo.Symbol;
 import com.metrics.MDOL.util.Streamer;
+import com.metrics.MDOL.util.TimeUtil;
+import com.metrics.rfa.quick.ItemManager;
 import com.reuters.rfa.ansipage.Page;
 import com.reuters.rfa.ansipage.PageUpdate;
 import com.reuters.rfa.common.PublisherPrincipalIdentity;
@@ -702,10 +707,95 @@ public final class GenericOMMParser
                             }
                             else
                             	parseData(data, ps, tabLevel);
-	                            List<NowLast> list = new ArrayList<NowLast>();
-	                            
+                            
+                            
+	                            if(fiddef.getName().equals("VALUE_DT1")){
+	                        		Streamer.date.put("["+itemName+"]VALUE_DT1", data.toString());
+	                        	}
+	                        	if(fiddef.getName().equals("VALUE_TS1")){
+	                        		Streamer.time.put("["+itemName+"]VALUE_TS1", data.toString());
+	                        	}
+	                        	if(fiddef.getName().equals("DSPLY_NAME")){
+	                        		Streamer.dispName.put("["+itemName+"]DSPLY_NAME", data.toString());
+	                        	}
+	                        	
+	                        	
+                            	Symbol symbol = null;
+                            	Field field = null;
+                            	
+                            	for(Symbol s : ItemManager.symbols){
+                            		if(itemName.equals(s.getName())){
+                            			symbol = s;
+                            			break;
+                            		}
+                            	}
+                        		/*if(fiddef.getName().equals("BID")){
+                        			System.out.println("TEST");
+                        		}*/
+                            	
+                            	for(Field f : ItemManager.fields){
+                            		if(itemName.equals(f.getSymbol().getName()) && fiddef.getName().equals(f.getName())){
+                            			field = f;
+                            			break;
+                            		}
+                            	}
+                            
+                            	if(symbol != null && field != null && data != null && !"".equals(data.toString())){
+                            		Quote quote = new Quote();
+                                	quote.setSymbol(symbol);
+                                	quote.setField(field);
+                                	quote.setValNow(Double.valueOf(data.toString().replace(",", "")));
+                                	quote.setValLast(Double.valueOf(data.toString().replace(",", "")));
+                                	quote.setInsertDate(TimeUtil.getTimeStamp(new Date()));
+                                	
+                                	String date = Streamer.date.get("["+itemName+"]VALUE_DT1");
+                                	String time = Streamer.time.get("["+itemName+"]VALUE_TS1");
+                                	String dispName = Streamer.dispName.get("["+itemName+"]DSPLY_NAME");
+                                	
+                                	Timestamp serverTime = TimeUtil.getTimeStamp(new Date());
+                                	
+                                	if(date != null && !"".equals(date) && time != null && !"".equals(time)){
+                                		serverTime = TimeUtil.getTimeOMM(date+time);
+                                		quote.setServerTime(serverTime);
+                                	} else {
+                                		quote.setServerTime(serverTime);
+                                	}
+                                	
+                                	if(dispName != null && !"".equals(dispName)){
+                                		quote.setDisplayName(dispName);
+                                	} else {
+                                		quote.setDisplayName("-");
+                                	}
+                                	
+                                	QuoteDay quoteDay = ItemManager.quoteDayDao.getBySymbolAndField(itemName, fiddef.getName());
+                                	if(quoteDay != null){
+                                		quoteDay.setValNow(Double.valueOf(data.toString().replace(",", "")));
+                                		quoteDay.setValLast(Double.valueOf(data.toString().replace(",", "")));
+                                		quoteDay.setInsertDate(TimeUtil.getTimeStamp(new Date()));
+                                		quoteDay.setServerTime(serverTime);
+                                		quoteDay.setDisplayName(dispName);
+                                		ItemManager.quoteDayDao.update(quoteDay);
+                                	} else {
+                                		quoteDay = new QuoteDay();
+                                		quoteDay.setSymbol(symbol);
+                                		quoteDay.setField(field);
+                                		quoteDay.setValNow(Double.valueOf(data.toString().replace(",", "")));
+                                		quoteDay.setValLast(Double.valueOf(data.toString().replace(",", "")));
+                                		quoteDay.setInsertDate(TimeUtil.getTimeStamp(new Date()));
+                                		quoteDay.setServerTime(serverTime);
+                                		quoteDay.setDisplayName(dispName);
+                                		ItemManager.quoteDayDao.save(quoteDay);
+                                	}
+                                	
+                                	
+                                	ItemManager.quoteDao.save(quote);
+                                	//System.out.println(itemName + " : " + fiddef.getName() + " : " + data + " : " + date + " : "  + time + " : "  + dispName);
+                                	
+                            	}
+                            	
+	                            /*List<NowLast> list = new ArrayList<NowLast>();
 	                			list.add(new NowLast(data.toString().replace(",", "")));
-	                			Streamer.map.put("["+itemName+"]"+fiddef.getName(), list);
+	                			Streamer.map.put("["+itemName+"]"+fiddef.getName(), list);*/
                         }
                         else
                         {

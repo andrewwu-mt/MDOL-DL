@@ -5,9 +5,16 @@ import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 
+import com.metrics.MDOL.dao.FieldDao;
+import com.metrics.MDOL.dao.FieldListDao;
 import com.metrics.MDOL.dao.ItemDao;
+import com.metrics.MDOL.dao.QuoteDao;
+import com.metrics.MDOL.dao.QuoteDayDao;
 import com.metrics.MDOL.dao.SymbolDao;
+import com.metrics.MDOL.dbo.Field;
+import com.metrics.MDOL.dbo.FieldList;
 import com.metrics.MDOL.dbo.Item;
+import com.metrics.MDOL.dbo.Symbol;
 import com.metrics.MDOL.util.Streamer;
 import com.metrics.rfa.utility.GenericOMMParser;
 import com.reuters.rfa.common.Client;
@@ -44,9 +51,18 @@ public class ItemManager implements Client
     public static String[] itemNames;
     public static String[] itemNames1;
 
+    public static List<Symbol> symbols = new ArrayList<Symbol>();
+    public static List<Field> fields = new ArrayList<Field>();
+    public static List<Item> items = new ArrayList<Item>();
+    public static List<FieldList> fieldLists = new ArrayList<FieldList>();
+    public static QuoteDao quoteDao;
+    public static QuoteDayDao quoteDayDao;
+    
     ApplicationContext _context;
     SymbolDao symbolDao;
     ItemDao itemDao;
+    FieldDao fieldDao;
+    FieldListDao fieldListDao;
 
     private	String	_className = "ItemManager";
 
@@ -57,6 +73,16 @@ public class ItemManager implements Client
         _mainApp = mainApp;
         symbolDao = (SymbolDao) _context.getBean("symbolDaoProxy");
         itemDao = (ItemDao) _context.getBean("itemDaoProxy");
+        fieldDao = (FieldDao) _context.getBean("fieldDaoProxy");
+        quoteDao = (QuoteDao) _context.getBean("quoteDaoProxy");
+        quoteDayDao = (QuoteDayDao) _context.getBean("quoteDayDaoProxy");
+        fieldListDao = (FieldListDao) _context.getBean("fieldListDaoProxy");
+        
+        symbols = symbolDao.getAllActiveSymbol();
+        fields = fieldDao.getAll();
+        items = itemDao.getAllActiveItem();
+        fieldLists = fieldListDao.getAllList();
+        
         _itemHandles = new ArrayList<Handle>();
     }
 
@@ -258,6 +284,8 @@ public class ItemManager implements Client
         	}
         }
       
+        
+        
         //GenericOMMParser.parse(respMsg);
         
         

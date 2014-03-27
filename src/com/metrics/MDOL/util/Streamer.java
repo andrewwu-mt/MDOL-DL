@@ -21,6 +21,9 @@ public class Streamer {
 
 	public static Map<String , List<NowLast>> map = new HashMap<String , List<NowLast>>();
 	public static List<String> listMap = new ArrayList<String>();
+	public static Map<String , String> dispName = new HashMap<String ,String>();
+	public static Map<String , String> date = new HashMap<String ,String>();
+	public static Map<String , String> time = new HashMap<String ,String>();
 	
 	//getter and setter
 
