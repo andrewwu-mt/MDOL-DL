@@ -4,7 +4,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.tanukisoftware.wrapper.WrapperListener;
 import org.tanukisoftware.wrapper.WrapperManager;
 
-import com.metrics.MDOL.snapshot.Scheduler;
 import com.metrics.rfa.news.NewsViewer;
 import com.metrics.rfa.quick.QSConsumer;
 
@@ -38,13 +37,7 @@ public class Main implements WrapperListener{
 			@Override
 			public void run() {
 				new QSConsumer(context);
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				new Scheduler(context);
-				
+
 				news = new NewsViewer(context);
 				news.run();
 			}
