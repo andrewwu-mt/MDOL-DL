@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+    	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="configLocation" value="classpath:hibernate.cfg.xml">
+		</property>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+		
+	</bean>
+
+	<bean id="IndexAction" class="com.metrics.MDOL.action.IndexAction" scope="prototype"/>
+	
+	<!-- quoteDayDao -->
+	<bean id="quoteDayDao" class="com.metrics.MDOL.dao.impl.QuoteDayDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="quoteDayDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="quoteDayDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- quoteDayDao End -->
+	
+	<!-- exchangeDao -->
+	<bean id="exchangeDao" class="com.metrics.MDOL.dao.impl.ExchangeDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="exchangeDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="exchangeDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- exchangeDao End -->
+	
+	<!-- currencyDao -->
+	<bean id="currencyDao" class="com.metrics.MDOL.dao.impl.CurrencyDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="currencyDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="currencyDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- htmlDao End -->
+	
+	
+	<!-- chainDao -->
+	<bean id="chainDao" class="com.metrics.MDOL.dao.impl.ChainDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="chainDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="chainDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- chainDao End -->
+	
+	<!-- linkDao -->
+	<bean id="linkDao" class="com.metrics.MDOL.dao.impl.LinkDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="linkDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="linkDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- userSecDao End -->
+	
+	<!-- symbolDao -->
+	<bean id="symbolDao" class="com.metrics.MDOL.dao.impl.SymbolDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="symbolDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="symbolDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- symbolDao End -->
+	
+	<!-- itemDao -->
+	<bean id="itemDao" class="com.metrics.MDOL.dao.impl.ItemDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="itemDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="itemDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- itemDao End -->
+	
+	<!-- fieldDao -->
+	<bean id="fieldDao" class="com.metrics.MDOL.dao.impl.FieldDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="fieldDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="fieldDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="save*">PROPAGATION_REQUIRED,-Exception</prop>
+					<prop key="update*">PROPAGATION_REQUIRED,-Exception</prop>
+					<prop key="delete*">PROPAGATION_REQUIRED,-Exception</prop>
+					<prop key="*">PROPAGATION_SUPPORTS,readOnly</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- fieldDao End -->
+	
+	<!-- fieldListDao -->
+	<bean id="fieldListDao" class="com.metrics.MDOL.dao.impl.FieldListDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="fieldListDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="fieldListDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- fieldListDao End -->
+	
+	<!-- pageUpdateDao -->
+	<bean id="pageUpdateDao" class="com.metrics.MDOL.dao.impl.PageUpdateDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="pageUpdateDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="pageUpdateDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- pageUpdateDao End -->
+	
+	<!-- templateDao -->
+	<bean id="templateDao" class="com.metrics.MDOL.dao.impl.TemplateDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="templateDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="templateDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- fieldDao End -->
+	
+	<!-- tsDao -->
+	<bean id="tsDao" class="com.metrics.MDOL.dao.impl.TsDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="tsDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="tsDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- tsDao End -->
+	
+	<!-- quoteDao -->
+	<bean id="quoteDao" class="com.metrics.MDOL.dao.impl.QuoteDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="quoteDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="quoteDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="save*">PROPAGATION_REQUIRED,-Exception</prop>
+					<prop key="update*">PROPAGATION_REQUIRED,-Exception</prop>
+					<prop key="delete*">PROPAGATION_REQUIRED,-Exception</prop>
+					<prop key="*">PROPAGATION_SUPPORTS,readOnly</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- quoteDao End -->
+	
+	<!-- storyDao -->
+	<bean id="storyDao" class="com.metrics.MDOL.dao.impl.StoryDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="storyDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	       	<property name="transactionManager">
+	       		<ref bean="transactionManager"/>
+	       	</property>
+	       	<property name="target">
+	       		<ref local="storyDao"/>
+	       	</property>
+	       	<property name="transactionAttributes">
+	       		<props>
+					<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				</props>
+	       	</property>
+		</bean>
+	<!-- storyDao End -->
+	
+	<!-- OptionDao -->
+	<bean id="optionDao" class="com.metrics.MDOL.dao.impl.OptionDaoImpl">
+       	<property name="sessionFactory">
+       		<ref local="sessionFactory"/>
+       	</property>
+	</bean>
+	<bean id="optionDaoProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	    <property name="transactionManager">
+	    	<ref bean="transactionManager"/>
+	    </property>
+	    <property name="target">
+	    	<ref local="optionDao"/>
+	    </property>
+	    <property name="transactionAttributes">
+	    	<props>
+				<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+			</props>
+	    </property>
+	</bean>
+	<!-- optionDao End -->
+	
+</beans>
